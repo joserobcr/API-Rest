@@ -1,11 +1,28 @@
 <!DOCTYPE html> 
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport">
-        <title>document</title>
-    </head>
-    <body>
-        <h1>Servidor express online</h1>
-    </body>
-</html>
+<html Lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demostración CORS</title>
+</head>
+<body>
+   <h1>Servidor express online</h1>
+   <button onclick="hacerPeticion()">Hacer petición al servidor HTTP</button>
+   <p id="resultado"></p>
+
+   <script>
+     function hacerPeticion() {
+        fetch('http://localhost:3000')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('resultado').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('resultado').innerText = 'Error en la petición.';
+            });
+    }
+   </script>
+
+</body>
+</html> 

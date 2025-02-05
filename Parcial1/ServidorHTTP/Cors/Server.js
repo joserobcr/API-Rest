@@ -2,7 +2,6 @@ var http = require('http');
 
 let server = http.createServer(function (req, res) {
     if (req.method === 'OPTIONS') {
-        // Manejo de preflight request
         res.writeHead(204, {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -15,7 +14,7 @@ let server = http.createServer(function (req, res) {
     // Respuesta para solicitudes normales
     res.writeHead(200, {
         'Content-Type': 'text/plain',
-        'Access-Control-Allow-Origin': '*' // Permitir todas las solicitudes
+       // 'Access-Control-Allow-Origin': '*' 
     });
     res.end('Hello World');
 });

@@ -28,6 +28,11 @@ app.post('/', (req, res) => {
     res.send('Hello World');
 });
 
+app.use((req, res) => {
+    res.status(404);
+    res.send('404 Not Found');
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
 });

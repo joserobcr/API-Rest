@@ -6,6 +6,7 @@ const PORT = 3001;
 
 app.use(cors()); // Habilita CORS para todas las rutas
 
+//middleware incorporado en express
 app.use('/', (req, res, next) => {
 console.log("Peticion al server")
 next();   
@@ -15,12 +16,30 @@ next();
     next();
 });
 
-//middleware incorporado en express
 //middleware para parsear el body de las peticiones
 app.use(express.json());
+app.use(express.text());
+
+//ejemplo thunder client get
+app.get('/alumno', (req, res) => {
+    console.log(req.query);
+    res.sendFile(__dirname + '/public/index.html');;
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
+});
+
+//ejercicio thunder client post
+app.post('/sistemas/:control', (req, res) => {
+    console.log(req.params);
+    res.send('Hola mundo');
+});
+
+//ejemplo thunder client patch
+app.patch('/maestros', (req, res) => {
+    console.log(req.body);
+    res.send('Hello Worlddddd');
 });
 
 app.post('/', (req, res) => {

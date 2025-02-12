@@ -3,6 +3,7 @@ const cors = require('cors');
 const { text } = require('body-parser');
 const app = express();
 const PORT = 3001;
+const xmlparser = require('express-xml-bodyparser');
 
 app.use(cors()); // Habilita CORS para todas las rutas
 
@@ -19,6 +20,7 @@ next();
 //middleware para parsear el body de las peticiones
 app.use(express.json());
 app.use(express.text());
+app.use(xmlparser());
 
 //ejemplo thunder client get
 app.get('/alumno', (req, res) => {
@@ -36,6 +38,12 @@ app.post('/sistemas/:control', (req, res) => {
     res.send('Hola mundo');
 });
 
+//ejercicio thunder client post XML
+app.post('/prefectos', (req, res) => {
+    console.log(req.params);
+    res.send('Hola mundo');
+});
+
 //ejemplo thunder client patch
 app.patch('/maestros', (req, res) => {
     console.log(req.body);
@@ -44,7 +52,7 @@ app.patch('/maestros', (req, res) => {
 
 app.post('/', (req, res) => {
     console.log(req.body);
-    res.send('Hello World');
+    res.send('Hola');
 });
 
 app.use((req, res) => {

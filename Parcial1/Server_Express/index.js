@@ -40,7 +40,7 @@ app.post('/sistemas/:control', (req, res) => {
 
 //ejercicio thunder client post XML
 app.post('/prefectos', (req, res) => {
-    console.log(req.params);
+    console.log(req.body);
     res.send('Hola mundo');
 });
 

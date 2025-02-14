@@ -45,10 +45,10 @@ app.post('/sistemas/:control', (req, res) => {
 });
 
 //ejercicio thunder client post XML
-/*app.post('/prefectos', (req, res) => {
+app.post('/prefectos', (req, res) => {
     console.log(req.body);
     res.send('Hola mundo');
-});*/
+});
 
 //EJEMPLO THUNDER CLIENT POST CON MULTER
 app.post('/prefectos', (req, res) => {

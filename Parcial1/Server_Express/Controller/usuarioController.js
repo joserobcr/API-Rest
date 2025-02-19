@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -8,23 +9,49 @@ const connection = mysql.createConnection({
 
 function consultarUsuario(req, res, next) {
     let consulta = '';
+    let valores = [];
 
-    if (typeof(req.query.id) === 'undefined') {
-        consulta = `SELECT\ * FROM usuarios`;
+    if (!req.query.idUsuario) {
+        consulta = 'SELECT * FROM usuarios';
     } else {
-        consulta = 'SELECT * FROM usuarios WHERE idUsuario='+req.query.idUsuario;
+        consulta = 'SELECT * FROM usuarios WHERE idUsuario = ?';
+        valores.push(req.query.idUsuario);
     }
 
-    connection.query(consulta,
-        function (err, results, fields) {
-
-            if (err) {
-                res.json({ Error: 'Error en Servidor' });
-                res.json({ resultado:results });
-
-            } else {
-                res.json({ resultado: 'No se encontraron resultados' });
-            }
+    connection.query(consulta, valores, function (err, results) {
+        if (err) {
+            return res.status(500).json({ error: 'Error en el servidor', detalle: err.message });
         }
-    );
+
+        if (results.length > 0) {
+            res.json({ resultado: results });
+        } else {
+            res.json({ mensaje: 'No se encontraron resultados' });
+        }
+    });
 }
+
+function agregarUsuario(req, res) {
+    const { nombre, correo, contrasena, rol } = req.body;
+
+    if (!nombre || !correo || !contrasena || !rol) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    }
+
+    const consulta = `INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)`;
+
+    connection.query(consulta, [nombre, correo, contrasena, rol], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: "Error en el servidor" });
+        }
+
+        res.json({
+            mensaje: "Usuario creado exitosamente",
+            id_usuario: results.insertId
+        });
+    });
+}
+
+module.exports = { consultarUsuario, agregarUsuario };
+
+

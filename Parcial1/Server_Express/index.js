@@ -1,29 +1,27 @@
 const express = require('express');
 const cors = require('cors'); 
-const { text } = require('body-parser');
-const multer = require('multer');
-const app = express();
-const path = require('path');
-const PORT = 3001;
 const xmlparser = require('express-xml-bodyparser');
-const routerUsuario = require('./Router/usuarioRouter.js');
 
-//middleware para parsear el body de las peticiones
+const app = express();
+const PORT = 3001;
+const routerUsuario = require('./Router/usuarioRouter.js'); 
+
+// Middleware para parsear el body de las peticiones
 app.use(express.json());
 app.use(express.text());
 app.use(xmlparser());
+app.use(cors()); 
 
-app.use('/usuarios', routerUsuario.router);
-
+app.use('/usuarios', routerUsuario);
 
 app.use((req, res) => {
-    res.status(404);
-    res.send('404 Not Found');
+    res.status(404).send('404 Not Found');
 });
 
 app.listen(PORT, () => {
     console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
 });
+
 
 
 

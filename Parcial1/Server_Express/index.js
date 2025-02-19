@@ -6,27 +6,63 @@ const app = express();
 const path = require('path');
 const PORT = 3001;
 const xmlparser = require('express-xml-bodyparser');
-const mysql = require('mysql2');
+const routerUsuario = require('./Router/usuarioRouter.js');
 
-const connection = mysql.createConnection({
+//middleware para parsear el body de las peticiones
+app.use(express.json());
+app.use(express.text());
+app.use(xmlparser());
+
+app.use('/usuarios', routerUsuario.router);
+
+
+app.use((req, res) => {
+    res.status(404);
+    res.send('404 Not Found');
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
+});
+
+
+
+/*const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
+    password: 'neymar2003',
     database: 'asesoratec',
-  });
+  });*/
 
-  app.get('/usuarios', (req, res, next) => {
-    console.log(req.query.id);
-    connection.query(
-        'SELECT * FROM `asesoratec.usuarios`',
+  /*app.get('/usuarios', (req, res, next) => {
+    
+    let consulta = '';
+
+    if (typeof req.query.id !== 'undefined') {
+        consulta = `SELECT * FROM usuarios WHERE id = ${req.query.id}`;
+    } else {
+        consulta = `SELECT * FROM usuarios`;
+    }
+    
+    console.log(consulta);
+
+    connection.query(consulta,
         function (err, results, fields) {
-          //console.log(results); // results contains rows returned by server
-          //console.log(fields); // fields contains extra meta data about results, if available
-            res.json({resultado:results});
+            console.log(results);
+
+            if(results.length > 0){
+                res.json({resultado:results});
+
+            }else{
+                res.json({resultado: 'No se encontraron resultados'});
+            }
         }
       );
-  });
+  });*/
 
-app.use(cors()); // Habilita CORS para todas las rutas
+/*app.use(cors()); // Habilita CORS para todas las rutas
+
+
 
 //middleware incorporado en express
 app.use('/', (req, res, next) => {
@@ -37,11 +73,6 @@ next();
     console.log("2da funcion middleware");
     next();
 });
-
-//middleware para parsear el body de las peticiones
-app.use(express.json());
-app.use(express.text());
-app.use(xmlparser());
 
 const folder = path.join(__dirname + '/ArchivosRecibidos/');
 const upload = multer({ dest: folder });
@@ -86,13 +117,6 @@ app.patch('/maestros', (req, res) => {
 app.post('/', (req, res) => {
     console.log(req.body);
     res.send('Hola');
-});
+});*/
 
-app.use((req, res) => {
-    res.status(404);
-    res.send('404 Not Found');
-});
 
-app.listen(PORT, () => {
-    console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
-});

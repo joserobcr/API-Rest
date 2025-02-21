@@ -5,8 +5,8 @@ const http = require('http');
 /*require('dotenv').config();
 console.log('Variables de entorno:', process.env);*/
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
-require('dotenv').config({ path: './VariablesDeEntorno/.env' });
+require('dotenv').config({ path: path.resolve(__dirname, 'VariablesDeEntorno/.env') });
+
 
 let PORT = process.env.PORT;
 

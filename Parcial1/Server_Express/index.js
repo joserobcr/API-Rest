@@ -1,16 +1,19 @@
 const express = require('express');
-const cors = require('cors'); 
+const cors = require('cors');
 const xmlparser = require('express-xml-bodyparser');
+const http = require('http');
+require('dotenv').config();
+
+let PORT = process.env.PORT;
 
 const app = express();
-const PORT = 3001;
-const routerUsuario = require('./Router/usuarioRouter.js'); 
+const routerUsuario = require('./Router/usuarioRouter.js');
 
 // Middleware para parsear el body de las peticiones
 app.use(express.json());
 app.use(express.text());
 app.use(xmlparser());
-app.use(cors()); 
+app.use(cors());
 
 app.use('/usuarios', routerUsuario);
 
@@ -21,9 +24,6 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor Express corriendo en http://localhost:${PORT}`);
 });
-
-
-
 
 /*const connection = mysql.createConnection({
     host: 'localhost',

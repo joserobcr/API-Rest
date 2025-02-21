@@ -6,6 +6,3 @@ router.get('/', usuarioController.consultarUsuario);
 router.post('/', usuarioController.agregarUsuario); 
 
 module.exports = router;
-
-
-

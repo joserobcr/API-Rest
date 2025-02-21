@@ -2,12 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const xmlparser = require('express-xml-bodyparser');
 const http = require('http');
-require('dotenv').config();
+//require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 
 let PORT = process.env.PORT;
 
 const app = express();
 const routerUsuario = require('./Router/usuarioRouter.js');
+
+
+console.log('Valor de PORT:', process.env.PORT);
 
 // Middleware para parsear el body de las peticiones
 app.use(express.json());

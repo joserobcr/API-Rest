@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const xmlparser = require('express-xml-bodyparser');
 const http = require('http');
-//require('dotenv').config();
-require('dotenv').config({ path: './.env' });
+require('dotenv').config();
 
 let PORT = process.env.PORT;
 

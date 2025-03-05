@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const hal = require('hal');
+const halson = require('halson');
 const usuarioController = require('../Controller/usuarioController.js');
 
 router.get('/', usuarioController.consultarUsuario);

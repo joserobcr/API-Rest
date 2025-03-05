@@ -27,15 +27,23 @@ function consultarUsuario(req, res, next) {
         }
 
         if (results.length > 0) {
-            // Crear recurso HAL para los resultados
-            const recurso = new hal.Resource({ resultado: results });
+            let usuarios = results.map(user => {
+                // Determinar mensaje de estado del usuario
+                let estadoMensaje = user.activo ? "El usuario está activo" : "El usuario está inactivo";
 
-            // Añadir enlaces HATEOAS
-            recurso.link('self', `/usuarios${req.query.idUsuario ? `?idUsuario=${req.query.idUsuario}` : ''}`);
-            recurso.link('crear', '/usuarios'); // Enlace para crear un nuevo usuario
-            recurso.link('editar', '/usuarios/{id}'); // Enlace para editar un usuario, ejemplo de plantilla
+                return halson({
+                    idUsuario: user.idUsuario,
+                    nombre: user.nombre,
+                    correo: user.correo,
+                    rol: user.rol,
+                    estado: estadoMensaje
+                })
+                .addLink('self', `/usuarios?idUsuario=${user.idUsuario}`)
+                .addLink('editar', `/usuarios/${user.idUsuario}`)
+                .addLink('eliminar', `/usuarios/${user.idUsuario}`);
+            });
 
-            res.json(recurso);
+            res.json({ usuarios });
         } else {
             res.json({ mensaje: 'No se encontraron resultados' });
         }
@@ -43,33 +51,36 @@ function consultarUsuario(req, res, next) {
 }
 
 
-function agregarUsuario(req, res) {
-    const { nombre, correo, contrasena, rol } = req.body;
 
-    if (!nombre || !correo || !contrasena || !rol) {
-        return res.status(400).json({ error: "Todos los campos son obligatorios" });
+function agregarUsuario(req, res) {
+    const { nombre, correo, contrasena, rol, activo } = req.body;
+
+    if (!nombre || !correo || !contrasena || !rol || activo === undefined) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios, incluyendo el estado activo/inactivo." });
     }
 
-    const consulta = `INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)`;
+    const consulta = `INSERT INTO usuarios (nombre, correo, contrasena, rol, activo) VALUES (?, ?, ?, ?, ?)`;
 
-    connection.query(consulta, [nombre, correo, contrasena, rol], (err, results) => {
+    connection.query(consulta, [nombre, correo, contrasena, rol, activo], (err, results) => {
         if (err) {
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
-        // Crear recurso HAL para el usuario creado
-        const recurso = new hal.Resource({
+        let estadoMensaje = activo ? "El usuario está activo" : "El usuario está inactivo";
+
+        const usuario = halson({
             mensaje: "Usuario creado exitosamente",
-            id_usuario: results.insertId
-        });
+            id_usuario: results.insertId,
+            estado: estadoMensaje
+        })
+        .addLink('self', `/usuarios?idUsuario=${results.insertId}`)
+        .addLink('editar', `/usuarios/${results.insertId}`)
+        .addLink('eliminar', `/usuarios/${results.insertId}`);
 
-        // Añadir enlace HATEOAS
-        recurso.link('self', `/usuarios?idUsuario=${results.insertId}`); // Enlace al nuevo usuario
-        recurso.link('crear', '/usuarios'); // Enlace para crear otro usuario
-
-        res.json(recurso);
+        res.json(usuario);
     });
 }
+
 
 
 module.exports = { consultarUsuario, agregarUsuario };

@@ -8,8 +8,6 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
-const hal = require('hal'); // ya lo tienes requeridado
-
 function consultarUsuario(req, res, next) {
     let consulta = '';
     let valores = [];
@@ -27,21 +25,12 @@ function consultarUsuario(req, res, next) {
         }
 
         if (results.length > 0) {
-            // Crear recurso HAL para los resultados
-            const recurso = new hal.Resource({ resultado: results });
-
-            // Añadir enlaces HATEOAS
-            recurso.link('self', `/usuarios${req.query.idUsuario ? `?idUsuario=${req.query.idUsuario}` : ''}`);
-            recurso.link('crear', '/usuarios'); // Enlace para crear un nuevo usuario
-            recurso.link('editar', '/usuarios/{id}'); // Enlace para editar un usuario, ejemplo de plantilla
-
-            res.json(recurso);
+            res.json({ resultado: results });
         } else {
             res.json({ mensaje: 'No se encontraron resultados' });
         }
     });
 }
-
 
 function agregarUsuario(req, res) {
     const { nombre, correo, contrasena, rol } = req.body;
@@ -57,19 +46,11 @@ function agregarUsuario(req, res) {
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
-        // Crear recurso HAL para el usuario creado
-        const recurso = new hal.Resource({
+        res.json({
             mensaje: "Usuario creado exitosamente",
             id_usuario: results.insertId
         });
-
-        // Añadir enlace HATEOAS
-        recurso.link('self', `/usuarios?idUsuario=${results.insertId}`); // Enlace al nuevo usuario
-        recurso.link('crear', '/usuarios'); // Enlace para crear otro usuario
-
-        res.json(recurso);
     });
 }
-
 
 module.exports = { consultarUsuario, agregarUsuario };

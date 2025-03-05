@@ -1,5 +1,6 @@
 require('dotenv').config();
 const mysql = require('mysql2');
+const halson = require('halson');
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST, 
@@ -8,7 +9,7 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
-const hal = require('hal'); // ya lo tienes requeridado
+const hal = require('hal'); 
 
 function consultarUsuario(req, res, next) {
     let consulta = '';
@@ -28,7 +29,6 @@ function consultarUsuario(req, res, next) {
 
         if (results.length > 0) {
             let usuarios = results.map(user => {
-                // Determinar mensaje de estado del usuario
                 let estadoMensaje = user.activo ? "El usuario está activo" : "El usuario está inactivo";
 
                 return halson({
@@ -38,9 +38,9 @@ function consultarUsuario(req, res, next) {
                     rol: user.rol,
                     estado: estadoMensaje
                 })
-                .addLink('self', `/usuarios?idUsuario=${user.idUsuario}`)
-                .addLink('editar', `/usuarios/${user.idUsuario}`)
-                .addLink('eliminar', `/usuarios/${user.idUsuario}`);
+                .addLink('self', `/usuarios`)
+                .addLink('editar', `/usuarios`)
+                .addLink('eliminar', `/usuarios`);
             });
 
             res.json({ usuarios });
@@ -49,8 +49,6 @@ function consultarUsuario(req, res, next) {
         }
     });
 }
-
-
 
 function agregarUsuario(req, res) {
     const { nombre, correo, contrasena, rol, activo } = req.body;
@@ -73,14 +71,12 @@ function agregarUsuario(req, res) {
             id_usuario: results.insertId,
             estado: estadoMensaje
         })
-        .addLink('self', `/usuarios?idUsuario=${results.insertId}`)
-        .addLink('editar', `/usuarios/${results.insertId}`)
-        .addLink('eliminar', `/usuarios/${results.insertId}`);
+        .addLink('self', `/usuarios`)
+        .addLink('editar', `/usuarios`)
+        .addLink('eliminar', `/usuarios`);
 
         res.json(usuario);
     });
 }
-
-
 
 module.exports = { consultarUsuario, agregarUsuario };

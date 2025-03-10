@@ -18,8 +18,16 @@ app.use(cors());
 
 app.use('/usuarios', routerUsuario);
 
-app.use((req, res) => {
+/*app.use((req, res) => {
     res.status(404).send('404 Not Found');
+});*/
+
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(500).json({
+        status:err.status,
+        mensaje:err.mensaje
+    })
 });
 
 app.listen(PORT, () => {

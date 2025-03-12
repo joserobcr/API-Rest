@@ -5,6 +5,7 @@ const http = require('http');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, 'VariablesDeEntorno/.env') });
 const winston = require('winston');
+const pug = require('pug');
 
 let PORT = process.env.PORT;
 
@@ -26,6 +27,17 @@ app.use(express.text());
 app.use(xmlparser());
 app.use(cors());
 
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'Views'));
+
+app.get('/views', (req, res) => {
+    let opciones = {
+        titulo: 'Inicio',
+        mensaje: 'Bienvenido a la página de inicio'
+    };
+    res.render('views', opciones);
+});
+
 app.use('/usuarios', routerUsuario);
 
 app.use((err,res,req,next) => {
@@ -40,6 +52,8 @@ app.use((err, req, res, next) => {
         mensaje:err.mensaje
     })
 });
+
+
 
 app.listen(PORT, () => {
     console.log(`Servidor Express corriendo en http://localhost:${PORT}`);

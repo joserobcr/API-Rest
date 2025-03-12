@@ -27,16 +27,7 @@ app.use(cors());
 
 // Configurar Pug como motor de vistas
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views')); // Apunta a la carpeta "views"
-
-// Ruta para renderizar la vista con Pug
-app.get('/views', (req, res) => {
-    let opciones = {
-        titulo: 'Inicio',
-        mensaje: 'Bienvenido a la página de inicio'
-    };
-    res.render('index', opciones); // Asegúrate de que tu archivo se llame "index.pug"
-});
+app.set('views', path.join(__dirname, 'views')); 
 
 // Rutas de usuario
 app.use('/usuarios', routerUsuario);

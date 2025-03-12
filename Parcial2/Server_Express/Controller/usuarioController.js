@@ -41,6 +41,8 @@ function consultarUsuario(req, res, next) {
                 .addLink('self', `/usuarios`)
                 .addLink('editar', `/usuarios`)
                 .addLink('eliminar', `/usuarios`);
+
+                
             });
 
             res.json({ usuarios });

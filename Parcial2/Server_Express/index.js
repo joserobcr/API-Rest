@@ -35,7 +35,7 @@ app.get('/views', (req, res) => {
         titulo: 'Inicio',
         mensaje: 'Bienvenido a la página de inicio'
     };
-    res.render('i', opciones); // Asegúrate de que tu archivo se llame "index.pug"
+    res.render('index', opciones); // Asegúrate de que tu archivo se llame "index.pug"
 });
 
 // Rutas de usuario

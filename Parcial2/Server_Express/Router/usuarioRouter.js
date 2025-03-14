@@ -12,6 +12,27 @@ router.get('/', (req, res) => {
     res.render('index', opciones); // Renderiza "index.pug" dentro de "views"
 });
 router.get('/', usuarioController.consultarUsuario);
-router.post('/', usuarioController.agregarUsuario); 
+//router.post('/', usuarioController.agregarUsuario); 
+
+const { check, validationResult } = require('express-validator');
+
+// Validaciones para la ruta de creación de usuario
+router.post(
+    '/',
+    [
+        check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+        check('correo', 'El correo no es válido').isEmail(),
+        check('contrasena', 'La contraseña debe tener mínimo 6 caracteres').isLength({ min: 6 }),
+        check('rol', 'El rol es obligatorio').not().isEmpty()
+    ],
+    (req, res, next) => {
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+            return res.status(400).json({ errores: errores.array() });
+        }
+        usuarioController.agregarUsuario(req, res, next);
+    }
+);
+
 
 module.exports = router;

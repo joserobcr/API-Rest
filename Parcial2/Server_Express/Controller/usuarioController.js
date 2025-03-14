@@ -55,14 +55,15 @@ function consultarUsuario(req, res, next) {
 function agregarUsuario(req, res) {
     const { nombre, correo, contrasena, rol, activo } = req.body;
 
-    if (!nombre || !correo || !contrasena || !rol || activo === undefined) {
+    if (!nombre || !correo || !contrasena || !rol /*|| /*activo === undefined*/) {
         return res.status(400).json({ error: "Todos los campos son obligatorios, incluyendo el estado activo/inactivo." });
     }
+    
+    const consulta = `INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)`;
 
-    const consulta = `INSERT INTO usuarios (nombre, correo, contrasena, rol, activo) VALUES (?, ?, ?, ?, ?)`;
-
-    connection.query(consulta, [nombre, correo, contrasena, rol, activo], (err, results) => {
+    connection.query(consulta, [nombre, correo, contrasena, rol /*activo*/], (err, results) => {
         if (err) {
+            console.log(err.message);
             return res.status(500).json({ error: "Error en el servidor" });
         }
 
